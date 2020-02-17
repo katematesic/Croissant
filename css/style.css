@@ -325,6 +325,17 @@ h4 {
 	height: 5vh!important;
 }
 
+
+.instructions {
+	grid-column: 2/3;
+	text-align: center;
+	margin: 0!important;
+	padding: 5em;
+	grid-row: 1;
+	font-size: 0.8em;
+	height: 5vh!important;
+}
+
 .progressBar {
 	grid-column: 2/3;
 	height: 4vh;
