@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,700&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.4.5/p5.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.4.5/addons/p5.dom.js"></script>
+	<script src="libraries/p5.speech.js"></script>
+	<title>Learn French!</title>
+</head>
+
+<body>
+<div id="grid">
+	<nav class="cell">
+		<div class = "col-left"><a href = "index.html" class = "Croissant"><h1>Croissant</h1></a></div>
+		<div class = "col-right">
+		<div class = "profileThumb"></div>
+		<h1>Kate</h1>
+		</div>
+	</nav>
+	<div class="lessonsBody">
+		<div class="cell lessonTitle">
+			<h2>The Classroom | Easy | Sentence Structure</h2>
+		</div>
+				<h2>Hear instructions</h2>
+			</div>
+			
+			<div class = "demo2" onclick="buttonClicked()">
+				<img src = "img/InteractiveObj.P2.png" alt="speaker icon" width= "auto" height= "35px">
+			</div></div>
+		</div>
+				<!-- <footer class="cell">Content goes here</footer> -->
+	</div>
+	<script>
+
+	
+		var myVoice = new p5.Speech('Google UK English Male', speechLoaded); // new P5.Speech object
+
+//myVoice.onLoad = speechLoaded; // could do it this way
+myVoice.onStart = speechStarted;
+myVoice.onPause = speechPaused; // not working
+myVoice.onResume = speechResumed; // not working
+myVoice.onEnd = speechEnded;
+
+var lyric = "Un stylo";
+
+
+function buttonClicked()
+{
+	myVoice.speak(lyric);
+	
+}
+
+function speechLoaded()
+{
+	  // say cheers:
+	myVoice.speak("testing one two three!!!");
+}
+
+function speechStarted()
+{
+	speakbutton.elt.innerHTML = 'Stop';
+}
+
+// not working...
+function speechPaused()
+{
+	speakbutton.elt.innerHTML = 'Resume';
+}
+
+// not working...
+function speechResumed()
+{
+	speakbutton.elt.innerHTML = 'Pause';
+}
+
+function speechEnded()
+{
+	speakbutton.elt.innerHTML = 'Speak';
+}
+
+</script>
+</body>
+
+</html>
+<link rel="stylesheet" href="css/style.css">
