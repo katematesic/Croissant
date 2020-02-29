@@ -52,7 +52,7 @@ function setup() {
 
   // Assuming our Arduino is connected, let's open the connection to it
   // Change this to the name of your arduino's serial port
-  serial.open("/dev/cu.usbmodem14101");
+  serial.open("/dev/cu.usbmodem14501");
 
   // Here are the callbacks that you can register
   // When we connect to the underlying server
@@ -103,10 +103,10 @@ osc2.amp(.5);
 osc3 = new p5.TriOsc(); // set frequency and type
 osc3.amp(.5);    
 
-fft = new p5.FFT();
-osc1.start();
-osc2.start(); 
-osc3.start();
+// fft = new p5.FFT();
+// osc1.start();
+// osc2.start(); 
+// osc3.start();
 
 // We are connected and ready to go
 function serverConnected() {
@@ -215,14 +215,14 @@ function draw() {
     else if(latestData<100 && latestData>50) myVoice.speak(incorrect);
     else myVoice.stop();
     
-//   background(255,255,255);
-//   fill(255,0,0);
-//   noStroke();    
-//   ellipse(100, 100, diameter0/10, diameter0/10);
-//   fill(0,255,0);
-//   ellipse(200, 100, diameter1/10, diameter1/10);
-//   fill(0,0,255);
-//   ellipse(300, 100, diameter2/10, diameter2/10);
+  background(255,255,255);
+  fill(255,0,0);
+  noStroke();    
+  ellipse(100, 100, diameter0/10, diameter0/10);
+  fill(0,255,0);
+  ellipse(200, 100, diameter1/10, diameter1/10);
+  fill(0,0,255);
+  ellipse(300, 100, diameter2/10, diameter2/10);
     
   
 //   var freq = map(diameter0, 0, width, 40, 880);    
