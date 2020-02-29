@@ -1,33 +1,22 @@
-<!DOCTYPE html>
-<html lang="">
-<head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.4.5/p5.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.4.5/addons/p5.dom.js"></script>
-  <script src="libraries/p5.speech.js"></script>
-  <script src="libraries/p5.serialport.js"></script>
-  <script src="libraries/p5.sound.js"></script>
-	<title>Learn French!</title>
-</head>
-<body>
-	<script>
-var osc;
-var playing = false;
+/* 
+August 2019 - Doug Whitton 
+play 3 analog sensors that output sound and circle graphic
+The Arduino file that's running is 'multiplesensors' in folder test code
+*/
+
+
 var serial;
 var latestData = "waiting for data";  // you'll use this to write incoming data to the canvas
-var splitter;
-var diameter0 = 0, diameter1 = 0, diameter2 = 0;
 
-var osc1, osc2, osc3, fft;
 
 function setup() {
   
-  createCanvas(windowWidth, windowHeight);
 
 ///////////////////////////////////////////////////////////////////
     //Begin serialport library methods, this is using callbacks
 ///////////////////////////////////////////////////////////////////    
+    
+
   // Instantiate our SerialPort object
   serial = new p5.SerialPort();
 
@@ -40,6 +29,7 @@ function setup() {
   serial.open("/dev/cu.usbmodem14101");
 
   // Here are the callbacks that you can register
+
   // When we connect to the underlying server
   serial.on('connected', serverConnected);
 
@@ -75,17 +65,6 @@ function setup() {
 ///////////////////////////////////////////////////////////////////////////
 
 
-osc1 = new p5.TriOsc(); // set frequency and type
-osc1.amp(.5);
-osc2 = new p5.TriOsc(); // set frequency and type
-osc2.amp(.5);  
-osc3 = new p5.TriOsc(); // set frequency and type
-osc3.amp(.5);    
-
-fft = new p5.FFT();
-osc1.start();
-osc2.start(); 
-osc3.start();
 
 // We are connected and ready to go
 function serverConnected() {
@@ -112,7 +91,6 @@ function gotError(theerror) {
   println(theerror);
 }
 
-
 // There is data available to work with from the serial port
 function gotData() {
   var currentString = serial.readLine();  // read the incoming string
@@ -121,14 +99,7 @@ function gotData() {
   console.log("currentString  ", currentString);             // println the string
   latestData = currentString;            // save it for the draw method
   console.log("latestData" + latestData);   //check to see if data is coming in
-  splitter = split(latestData, ',');       // split each number using the comma as a delimiter
-  //console.log("splitter[0]" + splitter[0]); 
-  diameter0 = splitter[0];                 //put the first sensor's data into a variable
-  diameter1 = splitter[1];
-  diameter2 = splitter[2]; 
-
-
-
+  
 }
 
 // We got raw data from the serial port
@@ -136,46 +107,24 @@ function gotRawData(thedata) {
   println("gotRawData" + thedata);
 }
 
-// Methods available
-// serial.read() returns a single byte of data (first in the buffer)
-// serial.readChar() returns a single char 'A', 'a'
-// serial.readBytes() returns all of the data available as an array of bytes
-// serial.readBytesUntil('\n') returns all of the data available until a '\n' (line break) is encountered
-// serial.readString() retunrs all of the data available as a string
-// serial.readStringUntil('\n') returns all of the data available as a string until a specific string is encountered
-// serial.readLine() calls readStringUntil with "\r\n" typical linebreak carriage return combination
-// serial.last() returns the last byte of data from the buffer
-// serial.lastChar() returns the last byte of data from the buffer as a char
-// serial.clear() clears the underlying serial buffer
-// serial.available() returns the number of bytes available in the buffer
-// serial.write(somevar) writes out the value of somevar to the serial device
+function draw() {    
+fill(0);    
+    stroke(0);    
+    noStroke();
+    if (latestData>0) {
+  textSize(14);
+  let s = 'It might be too loud to play';
+fill(50);
+text(s, 10, 10, 70, 80); // Text wraps within text box
+
+        } else{
+  textSize(32);
+}
+    }
 
 
-function draw() {
+
+
   
-  background(255,255,255);
-  fill(255,0,0);
-  noStroke();    
-  ellipse(100, 100, diameter0/10, diameter0/10);
-  fill(0,255,0);
-  ellipse(200, 100, diameter1/10, diameter1/10);
-  fill(0,0,255);
-  ellipse(300, 100, diameter2/10, diameter2/10);
-    
-  
-  var freq = map(diameter0, 0, width, 40, 880);    
-    osc1.freq(freq);
-    console.log(freq);
-    
-  var freq2 = map(diameter1, 0, width, 40, 880);    
-    osc2.freq(freq2);
-    console.log(freq2);
-    
- var freq3 = map(diameter2, 0, width, 40, 880);    
-    osc3.freq(freq3);
-    console.log(freq3); 
 
-</script>
-</body>
-
-</html>
+ 

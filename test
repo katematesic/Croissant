@@ -1,0 +1,214 @@
+// Copyright (c) 2019 ml5
+//
+// This software is released under the MIT License.
+// https://opensource.org/licenses/MIT
+
+/* ===
+ml5 Example
+Real time Object Detection using YOLO and p5.js
+=== */
+//ml5 and speech variables
+let video;
+let yolo;
+let status;
+let objects = [];
+var myVoice = new p5.Speech('Google UK English Male', speechLoaded); // new P5.Speech object
+var serial;
+var latestData = "waiting for data";  // you'll use this to write incoming data to the canvas
+
+	//myVoice.onLoad = speechLoaded; // could do it this way
+	myVoice.onStart = speechStarted;
+	myVoice.onPause = speechPaused; // not working
+	myVoice.onResume = speechResumed; // not working
+	myVoice.onEnd = speechEnded;
+	var speakbutton; // UI
+
+function setup() {
+///////////////////////////////////////////////////////////////////
+    //Begin serialport library methods, this is using callbacks
+///////////////////////////////////////////////////////////////////    
+    
+
+  // Instantiate our SerialPort object
+  serial = new p5.SerialPort();
+
+  // Get a list the ports available
+  // You should have a callback defined to see the results
+  serial.list();
+
+  // Assuming our Arduino is connected, let's open the connection to it
+  // Change this to the name of your arduino's serial port
+  serial.open("/dev/cu.usbmodem14501");
+
+  // Here are the callbacks that you can register
+
+  // When we connect to the underlying server
+  serial.on('connected', serverConnected);
+
+  // When we get a list of serial ports that are available
+  serial.on('list', gotList);
+  // OR
+  //serial.onList(gotList);
+
+  // When we some data from the serial port
+  serial.on('data', gotData);
+  // OR
+  //serial.onData(gotData);
+
+  // When or if we get an error
+  serial.on('error', gotError);
+  // OR
+  //serial.onError(gotError);
+
+  // When our serial port is opened and ready for read/write
+  serial.on('open', gotOpen);
+  // OR
+  //serial.onOpen(gotOpen);
+
+  // Callback to get the raw data, as it comes in for handling yourself
+  //serial.on('rawdata', gotRawData);
+  // OR
+  //serial.onRawData(gotRawData);
+  createCanvas(320, 240);
+
+  //start the webcam
+  video = createCapture(VIDEO);
+  video.size(320, 240);
+
+  // Create a YOLO method
+  yolo = ml5.YOLO(video, startDetecting);
+  
+  // Hide the original video
+  video.hide();
+  status = select('#status');
+  createCanvas(400, 480);
+		// button:
+		speakbutton = createButton('Pause');
+		  speakbutton.position(180, 630);
+		  speakbutton.mousePressed(buttonClicked);
+		  speakbutton.className = "thebutton"
+
+}
+
+// We are connected and ready to go
+function serverConnected() {
+	console.log("Connected to Server");
+  }
+  
+  // Got the list of ports
+  function gotList(thelist) {
+	console.log("List of Serial Ports:");
+	// theList is an array of their names
+	for (var i = 0; i < thelist.length; i++) {
+	  // Display in the console
+	  console.log(i + " " + thelist[i]);
+	}
+  }
+  
+  // Connected to our serial device
+  function gotOpen() {
+	println("Serial Port is Open");
+  }
+  
+  // Ut oh, here is an error, let's log it
+  function gotError(theerror) {
+	println(theerror);
+  }
+  
+  
+  
+  // There is data available to work with from the serial port
+  function gotData() {
+	var currentString = serial.readLine();  // read the incoming string
+	trim(currentString);                    // remove any trailing whitespace
+	if (!currentString) return;             // if the string is empty, do no more
+	console.log("currentString  ", currentString);             // println the string
+	latestData = currentString;            // save it for the draw method
+	console.log("latestData" + latestData);   //check to see if data is coming in
+	
+  }
+  
+  // We got raw data from the serial port
+  function gotRawData(thedata) {
+	println("gotRawData" + thedata);
+  }
+  
+//draw a box around the object and show the name of the object detected
+function draw() {
+  image(video, 0, 0, width, height);
+  for (let i = 0; i < objects.length; i++) {
+    noStroke();
+    fill(66, 167, 245);
+    text(objects[i].label, objects[i].x * width, objects[i].y * height - 5);
+    noFill();
+    strokeWeight(4);
+    stroke(66, 167, 245);
+    rect(objects[i].x * width, objects[i].y * height, objects[i].w * width, objects[i].h * height);
+    //Log the object detected to the console
+    console.log(objects[i].label);
+	//store the name of the object detected in a variable
+	var lyric2 = objects[i].label;
+
+	if (latestData>100){
+        //tell the p5speech to read the object detected out loud
+	myVoice.speak(lyric2);
+ }
+
+ else{
+	myVoice.stop();
+ 
+  }
+
+}
+}
+
+//load the detection model
+function startDetecting() {
+  status.html('Model loaded!');
+  detect();
+}
+
+function detect() {
+  yolo.detect(function(err, results) {
+    objects = results;
+    detect();
+  });
+}
+//allow the user to pause the text to speech
+function buttonClicked()
+	{
+		myVoice.pause(); // not working
+		myVoice.resume();
+	}
+
+  //load the speech model and test it
+	function speechLoaded()
+	{
+  		// say cheers:
+		myVoice.speak("testing one two three!!!");
+	}
+
+  //speech use cases:
+	function speechStarted()
+	{
+		speakbutton.elt.innerHTML = 'Stop';
+	}
+
+	// not working...
+	function speechPaused()
+	{
+		speakbutton.elt.innerHTML = 'Resume';
+	}
+
+	// not working...
+	function speechResumed()
+	{
+		speakbutton.elt.innerHTML = 'Pause';
+	}
+
+	function speechEnded()
+	{
+		speakbutton.elt.innerHTML = 'Speak';
+	}
+
+

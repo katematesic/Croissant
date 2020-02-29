@@ -12,6 +12,15 @@
 </head>
 <body>
 	<script>
+		var myVoice = new p5.Speech('Google UK English Male', speechLoaded); // new P5.Speech object
+
+//myVoice.onLoad = speechLoaded; // could do it this way
+myVoice.onStart = speechStarted;
+myVoice.onPause = speechPaused; // not working
+myVoice.onResume = speechResumed; // not working
+myVoice.onEnd = speechEnded;
+
+var lyric = "Un stylo";
 var osc;
 var playing = false;
 var serial;
@@ -37,7 +46,7 @@ function setup() {
 
   // Assuming our Arduino is connected, let's open the connection to it
   // Change this to the name of your arduino's serial port
-  serial.open("/dev/cu.usbmodem14101");
+  serial.open("/dev/cu.usbmodem1411");
 
   // Here are the callbacks that you can register
   // When we connect to the underlying server
@@ -175,7 +184,65 @@ function draw() {
     osc3.freq(freq3);
     console.log(freq3); 
 
+
+    if (diameter3>0) {
+
+      myVoice.speak("Try again!");
+
+        } 
+
+if (diameter1>0) {
+
+  myVoice.speak("Try again!");
+
+        } 
+
+		    if (diameter2>0) {
+
+            myVoice.speak("Try again!");
+
+            } 
+    
+    else{
+      myVoice.speak("That's correct!");
+
+    }
+function buttonClicked()
+{
+	myVoice.speak(lyric);
+	
+}
+
+function speechLoaded()
+{
+	  // say cheers:
+	myVoice.speak("Let's make a story, ");
+}
+
+function speechStarted()
+{
+	speakbutton.elt.innerHTML = 'Stop';
+}
+
+// not working...
+function speechPaused()
+{
+	speakbutton.elt.innerHTML = 'Resume';
+}
+
+// not working...
+function speechResumed()
+{
+	speakbutton.elt.innerHTML = 'Pause';
+}
+
+function speechEnded()
+{
+	speakbutton.elt.innerHTML = 'Speak';
+}
+
 </script>
 </body>
 
 </html>
+<link rel="stylesheet" href="css/style.css">
