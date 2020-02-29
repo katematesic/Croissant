@@ -12,6 +12,21 @@
 </head>
 <body>
 	<script>
+
+	var myVoice = new p5.Speech('Google UK English Male', speechLoaded); // new P5.Speech object
+
+//myVoice.onLoad = speechLoaded; // could do it this way
+myVoice.onStart = speechStarted;
+myVoice.onPause = speechPaused; // not working
+myVoice.onResume = speechResumed; // not working
+myVoice.onEnd = speechEnded;
+
+var lyric = "Welcome to croissant. Let's begin";
+  var incorrect = "Close, try again";
+  var correct = "That's correct, you rock!";
+
+
+var speakbutton; // UI
 var osc;
 var playing = false;
 var serial;
@@ -67,7 +82,13 @@ function setup() {
   //serial.on('rawdata', gotRawData);
   // OR
   //serial.onRawData(gotRawData);
+  myVoice.speak(lyric);
+		createCanvas(400, 400);
 
+		// button:
+		speakbutton = createButton('Speak');
+  		speakbutton.position(180, 200);
+  		speakbutton.mousePressed(buttonClicked);
   
 }
 ////////////////////////////////////////////////////////////////////////////
@@ -149,32 +170,73 @@ function gotRawData(thedata) {
 // serial.clear() clears the underlying serial buffer
 // serial.available() returns the number of bytes available in the buffer
 // serial.write(somevar) writes out the value of somevar to the serial device
+function buttonClicked()
+	{
+	
+	}
+
+	function speechLoaded()
+	{
+  		// say cheers:
+		myVoice.speak("testing one two three!!!");
+	}
+
+	function speechStarted()
+	{
+		background(0, 255, 0);
+		speakbutton.elt.innerHTML = 'Stop';
+	}
+
+	// not working...
+	function speechPaused()
+	{
+		background(0, 255, 0);
+		speakbutton.elt.innerHTML = 'Resume';
+	}
+
+	// not working...
+	function speechResumed()
+	{
+		background(0, 255, 0);
+		speakbutton.elt.innerHTML = 'Pause';
+	}
+
+	function speechEnded()
+	{
+		background(255, 0, 0);
+		speakbutton.elt.innerHTML = 'Speak';
+	}
 
 
 function draw() {
-  
-  background(255,255,255);
-  fill(255,0,0);
-  noStroke();    
-  ellipse(100, 100, diameter0/10, diameter0/10);
-  fill(0,255,0);
-  ellipse(200, 100, diameter1/10, diameter1/10);
-  fill(0,0,255);
-  ellipse(300, 100, diameter2/10, diameter2/10);
+  if(latestData>100) myVoice.speak(correct);
+		// else if(speakbutton.elt.innerHTML=='Pause') myVoice.pause(); // not working
+		// else if(speakbutton.elt.innerHTML=='Resume') myVoice.resume(); // not working
+    else if(latestData<100 && latestData>50) myVoice.speak(incorrect);
+    else myVoice.stop();
+    
+//   background(255,255,255);
+//   fill(255,0,0);
+//   noStroke();    
+//   ellipse(100, 100, diameter0/10, diameter0/10);
+//   fill(0,255,0);
+//   ellipse(200, 100, diameter1/10, diameter1/10);
+//   fill(0,0,255);
+//   ellipse(300, 100, diameter2/10, diameter2/10);
     
   
-  var freq = map(diameter0, 0, width, 40, 880);    
-    osc1.freq(freq);
-    console.log(freq);
+//   var freq = map(diameter0, 0, width, 40, 880);    
+//     osc1.freq(freq);
+//     console.log(freq);
     
-  var freq2 = map(diameter1, 0, width, 40, 880);    
-    osc2.freq(freq2);
-    console.log(freq2);
+//   var freq2 = map(diameter1, 0, width, 40, 880);    
+//     osc2.freq(freq2);
+//     console.log(freq2);
     
- var freq3 = map(diameter2, 0, width, 40, 880);    
-    osc3.freq(freq3);
-    console.log(freq3); 
-
+//  var freq3 = map(diameter2, 0, width, 40, 880);    
+//     osc3.freq(freq3);
+//     console.log(freq3); 
+}
 </script>
 </body>
 
