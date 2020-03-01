@@ -209,15 +209,22 @@ function buttonClicked()
 
 
 function draw() {
-  if(latestData>100) myVoice.speak(correct);
-		// else if(speakbutton.elt.innerHTML=='Pause') myVoice.pause(); // not working
-		// else if(speakbutton.elt.innerHTML=='Resume') myVoice.resume(); // not working
-    else if(latestData<100 && latestData>50) myVoice.speak(incorrect);
-    else myVoice.stop();
+  // if(latestData>100) myVoice.speak(correct);
+	// 	// else if(speakbutton.elt.innerHTML=='Pause') myVoice.pause(); // not working
+	// 	// else if(speakbutton.elt.innerHTML=='Resume') myVoice.resume(); // not working
+  //   else if(latestData<100 && latestData>50) myVoice.speak(incorrect);
+  //   else myVoice.stop();
     
   background(255,255,255);
   fill(255,0,0);
   noStroke();    
+  println(diameter0);
+  println(diameter1);
+  if(diameter0>900){
+    myVoice.speak(correct);
+
+  }
+
   ellipse(100, 100, diameter0/10, diameter0/10);
   fill(0,255,0);
   ellipse(200, 100, diameter1/10, diameter1/10);
