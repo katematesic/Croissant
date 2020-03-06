@@ -13,7 +13,7 @@
 <body>
 	<script>
 
-	var myVoice = new p5.Speech('Google UK English Male', speechLoaded); // new P5.Speech object
+	var myVoice = new p5.Speech('fr', speechLoaded); // new P5.Speech object
 
 //myVoice.onLoad = speechLoaded; // could do it this way
 myVoice.onStart = speechStarted;
@@ -21,12 +21,14 @@ myVoice.onPause = speechPaused; // not working
 myVoice.onResume = speechResumed; // not working
 myVoice.onEnd = speechEnded;
 
-var lyric = "Welcome to croissant. Let's begin";
-  var incorrect = "Close, try again";
-  var correct = "That's correct, you rock!";
+var lyric = "Bienvenue a croissant. Welcome! Place the blocks in the correct spot in the story";
+  var incorrect = "C'est proche, réessayez";
+  var correct = "C'est vrai";
+  var story = "Il etait une fois une princess qui vivait dane un chateau. Elle et moi avons rencontre un monstre effrayant. Elle a crie et a coru a la maison.";
 
 
-var speakbutton; // UI
+
+// var speakbutton; // UI
 var osc;
 var playing = false;
 var serial;
@@ -52,7 +54,7 @@ function setup() {
 
   // Assuming our Arduino is connected, let's open the connection to it
   // Change this to the name of your arduino's serial port
-  serial.open("/dev/cu.usbmodem14501");
+  serial.open("/dev/cu.usbmodem14101");
 
   // Here are the callbacks that you can register
   // When we connect to the underlying server
@@ -216,20 +218,30 @@ function draw() {
   //   else myVoice.stop();
     
   background(255,255,255);
-  fill(255,0,0);
-  noStroke();    
   println(diameter0);
   println(diameter1);
-  if(diameter0>900){
+  println(diameter2);
+
+
+  if(diameter0>130 && diameter0<740){
     myVoice.speak(correct);
+    myVoice.speak(story);
+
+
+  }
+  
+
+
+  else{
+    myVoice.speak(incorrect);
 
   }
 
-  ellipse(100, 100, diameter0/10, diameter0/10);
-  fill(0,255,0);
-  ellipse(200, 100, diameter1/10, diameter1/10);
-  fill(0,0,255);
-  ellipse(300, 100, diameter2/10, diameter2/10);
+  // ellipse(100, 100, diameter0/10, diameter0/10);
+  // fill(0,255,0);
+  // ellipse(200, 100, diameter1/10, diameter1/10);
+  // fill(0,0,255);
+  // ellipse(300, 100, diameter2/10, diameter2/10);
     
   
 //   var freq = map(diameter0, 0, width, 40, 880);    
